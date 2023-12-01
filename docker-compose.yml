@@ -1,0 +1,48 @@
+version: '3'
+
+services:
+  # postgres:
+  #   image: postgres:latest
+  #   environment:
+  #     POSTGRES_DB: test_db
+  #     POSTGRES_USER: test_user
+  #     POSTGRES_PASSWORD: test_password
+  #   ports:
+  #     - "5432:5432"
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+
+  # pgbouncer:
+  #   image: pgbouncer/pgbouncer:latest
+  #   ports:
+  #     - "6432:6432"
+  #   # depends_on:
+  #   #   - postgres
+  #   environment:
+  #     DATABASES_HOST: postgres
+  #     DATABASES_PORT: 5432
+  #   volumes:
+  #     - ./pg:/etc/pgbouncer/
+  #     # - ./pg/userlist.txt:/etc/pgbouncer/userlist.txt
+  #     # - ./init.sql:/docker-entrypoint-initdb.d/init.sql  # Mount the initialization script
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: isayamulaudzi@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: test_password
+    ports:
+      - "5050:80"
+    # depends_on:
+    #   - postgres
+
+  djangoapp:
+    container_name: testapp
+    build: ./testapp
+    # depends_on:
+    #   - postgres
+    ports:
+      - "8000:8000"  # Map host port 8000 to container port 8000    
+
+volumes:
+  postgres_data:
