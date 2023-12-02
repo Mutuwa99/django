@@ -27,7 +27,7 @@ exit
 
 
 [databases]
-* = host=localhost port=5432 dbname=test_db user=postgres password=test_password
+* = host=3.83.206.124 port=5432 dbname=test_db user=postgres password=test_password
 
 [pgbouncer]
 listen_addr = 0.0.0.0

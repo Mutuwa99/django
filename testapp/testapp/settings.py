@@ -76,11 +76,11 @@ WSGI_APPLICATION = 'testapp.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'test_db',
-        'USER': 'pg_user',  # Replace with the user from your userlist.txt
-        'PASSWORD': 'pg_password',  # Replace with the password from your userlist.txt
+        'NAME': 'isaya',
+        'USER': 'postgres',  # Replace with the user from your userlist.txt
+        'PASSWORD': 'new_password',  # Replace with the password from your userlist.txt
         'HOST': 'localhost',  # Replace with the IP address or hostname of your host machine
-        'PORT': '6432',  # Port used by PgBouncer
+        'PORT': '5432',  # Port used by PgBouncer
     }
 }
 
