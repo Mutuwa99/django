@@ -1,48 +1,70 @@
-version: '3'
+version: '3.8'
 
 services:
-  # postgres:
-  #   image: postgres:latest
-  #   environment:
-  #     POSTGRES_DB: test_db
-  #     POSTGRES_USER: test_user
-  #     POSTGRES_PASSWORD: test_password
-  #   ports:
-  #     - "5432:5432"
-  #   volumes:
-  #     - postgres_data:/var/lib/postgresql/data
+  db:
+    image: postgres:14.1-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - '5432:5432'
+    volumes:
+      - db:/var/lib/postgresql/data
 
-  # pgbouncer:
-  #   image: pgbouncer/pgbouncer:latest
-  #   ports:
-  #     - "6432:6432"
-  #   # depends_on:
-  #   #   - postgres
-  #   environment:
-  #     DATABASES_HOST: postgres
-  #     DATABASES_PORT: 5432
-  #   volumes:
-  #     - ./pg:/etc/pgbouncer/
-  #     # - ./pg/userlist.txt:/etc/pgbouncer/userlist.txt
-  #     # - ./init.sql:/docker-entrypoint-initdb.d/init.sql  # Mount the initialization script
+  pgbouncer:
+    image: pgbouncer/pgbouncer:latest
+    ports:
+      - '6432:6432'
+    depends_on:
+      - db
+    environment:
+      DATABASES_HOST: db
+      DATABASES_PORT: 5432
+      DATABASES_USER: postgres
+      DATABASES_PASSWORD: postgres
+    volumes:
+      - ./pgbouncer:/etc/pgbouncer
+
+  pgbouncer-dashboard:
+    image: pgbouncer/pgbouncer-dashboard
+    ports:
+      - '8081:80'
+    depends_on:
+      - pgbouncer
 
   pgadmin:
     image: dpage/pgadmin4
     environment:
-      PGADMIN_DEFAULT_EMAIL: isayamulaudzi@gmail.com
-      PGADMIN_DEFAULT_PASSWORD: test_password
+      - PGADMIN_DEFAULT_EMAIL=admin@example.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
     ports:
-      - "5050:80"
-    # depends_on:
-    #   - postgres
+      - '5050:80'
+    depends_on:
+      - pgbouncer
+    volumes:
+      - pgadmin:/var/lib/pgadmin
 
-  djangoapp:
-    container_name: testapp
-    build: ./testapp
-    # depends_on:
-    #   - postgres
+  app:
+    container_name: app
+    build:
+      context: ./testapp
+    depends_on:
+      - pgbouncer
     ports:
-      - "8000:8000"  # Map host port 8000 to container port 8000    
+      - 8000:8000
+    environment:
+      DB_HOST: pgbouncer
+      DB_PORT: 6432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+    volumes:
+      - './:/src'
 
 volumes:
-  postgres_data:
+  db:
+    driver: local
+  pgadmin:
+    driver: local
+  pgbouncer:
+    driver: local

@@ -78,9 +78,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'isaya',
         'USER': 'postgres',  # Replace with the user from your userlist.txt
-        'PASSWORD': 'new_password',  # Replace with the password from your userlist.txt
-        'HOST': 'localhost',  # Replace with the IP address or hostname of your host machine
-        'PORT': '5432',  # Port used by PgBouncer
+        'PASSWORD': 'postgres',  # Replace with the password from your userlist.txt
+        'HOST': 'pgbouncer',  # Replace with the IP address or hostname of your host machine
+        'PORT': '6432',  # Port used by PgBouncer
     }
 }
 
